@@ -5,6 +5,10 @@
   reagent {:mvn/version "0.8.1"}
   re-frame {:mvn/version "0.10.6"}
   com.bhauman/figwheel-main {:mvn/version "0.2.0"}
-  com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}}
+  com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}
+  cljfmt {:mvn/version "0.6.3"}
+  zprint {:mvn/version "0.4.15"}
+  }
+
  :paths ["src" "target" "resources"]
  :aliases {:build-dev {:main-opts ["-m" "figwheel.main" "-b" "dev" "-r"]}}}

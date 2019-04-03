@@ -7,7 +7,10 @@
 
             [reagent.core :as reagent]
             [re-frame.core :as rf]
-            [clojure.string :as str]))
+            [clojure.string :as str]
+
+            ;; [book.reader]
+            [book.page-1]))
 
 (enable-console-print!)
 (println "hello")
@@ -67,7 +70,9 @@
   []
   [:div
    [:h1 "Flipping three coins"]
-   [flips]])
+   [flips]
+   [book.page-1/contents]
+   ])
 
 
 (rf/dispatch-sync [:initialize])
