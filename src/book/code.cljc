@@ -8,4 +8,6 @@
 (defmacro mpcode [& forms]
   (let [strs (map (fn [f] (zp/zprint-str f {:style :community})) forms)]
 
-    `[:textarea {} ~(string/join "\n\n" (vec strs))]))
+    ;; `[:textarea {} ~(string/join "\n\n" (vec strs))]
+
+    (string/join "\n\n" (vec strs))))

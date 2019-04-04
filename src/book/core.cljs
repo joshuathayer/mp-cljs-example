@@ -37,10 +37,11 @@
 
 
 ;; re-frame stuff
-
+;; events
 (rf/reg-event-db
   :initialize
-  (fn [_ _] {:coins (coin-model 3)}))
+  (fn [_ _] {:coins (coin-model 3)
+             :theme "default"}))
 
 (rf/reg-event-db
  :flip
@@ -48,11 +49,74 @@
    (assoc db :coins (coin-model 3))))
 
 
+
+(rf/reg-event-db
+ :open-editor
+ (fn  [db _]
+   (-> db
+       (assoc :editor :open)
+       (assoc :theme "default"))))
+
+
+(rf/reg-event-db
+ :close-editor
+ (fn  [db _]
+   (assoc db :editor :close)))
+
+(rf/reg-event-db
+ :assoc-theme
+ (fn [db [_ theme]]
+   (println "THEME" theme)
+   (assoc db :theme theme)))
+
+(rf/reg-event-db
+ :assoc-cm-editor
+ (fn [db [_ ed]]
+   (assoc db :cm-editor ed)))
+
+(rf/reg-event-db
+ :cm-changed
+ (fn [db [_ cm]]
+   (let [content (.getValue (.getDoc cm))]
+     (println "cm changed!" content)
+     db)))
+
+;; subs
 (rf/reg-sub
  :coins
  (fn [db _]
    (:coins db)))
 
+
+;; ---  subs editor
+(rf/reg-sub
+ :name
+ (fn [db _]
+   (:name db)))
+
+(rf/reg-sub
+ :editor
+ (fn [db _]
+   (:editor db)))
+
+(rf/reg-sub
+ :theme
+ (fn [db _]
+   (println "THEME SUB" (:theme db))
+   (:theme db)))
+
+(rf/reg-sub
+ :cm-editor
+ (fn [db _]
+   (:cm-editor db)))
+
+
+(rf/reg-sub
+ :content
+ (fn [db _]
+   (:content db)))
+
+;; --- end editor
 
 (defn flips
   []
