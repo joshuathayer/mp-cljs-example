@@ -15,6 +15,9 @@
   [txt]
   [:h1 txt])
 
+(defn my-flip [v]
+  (flip v))
+
 (defn part-header
   [txt]
   [:h3 txt])
@@ -54,19 +57,34 @@
       [:div])}))
 
 
+;; mpcode is a macro which takes the clojure forms (after the reader),
+;; and turns them in to pretty-printed strings.
+
 (defn contents
   []
   [:div
-   [chapter-header "This is a chapter"]
-   [part-header "And some code"]
+   [part-header "Example code evaluation."]
+   [:p "Issues:"]
+   [:ul
+    [:li [:code ":refer"] " does not work in " [:code ":require"] " forms"]
+    [:li "Starts in " [:code "cljs/user"] " namespace, not namespace that the editor is embedded in"]
+    [:li [:code "(in-ns ...)"] " works, but must be eval'd on its own (using it at the top of the code to be evaulated does not work- only `in-ns` is eval'd)"]
+    [:li "After " [:code "(in-ns 'book.chapter-1)"] " we are able to evaluate functions defined in this namespace (like `part-header`) but not functions in namespaces `require`d into the namespace (`flip`, eg)"]
+    ]
    [:p {} "Eval result: " @(rf/subscribe [:eval-res])]
    [:div
     [editor-component
      (code/mpcode
 
-      (ns foo.bar
-        (:require [metaprob.prelude :as prelude]
-                  [metaprob.distributions :as dist]))
+      ;; (ns foo.bar
+      ;;   (:require [metaprob.prelude :as prelude]
+      ;;             [metaprob.distributions :as dist]))
+
+      ;; this does not work (`:refer`)
+      ;;(ns foo.bar
+      ;;  (:require [metaprob.prelude :as prelude :refer [apply map replicate]]
+      ;;            [metaprob.distributions :as dist :refer [flip uniform uniform-discrete]]))
+
 
       (defn coin-model-1
         "Flip a fair coin"
