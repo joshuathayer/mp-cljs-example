@@ -32,7 +32,6 @@
  :cm-changed
  (fn [db [_ cm]]
    (let [content (.getValue (.getDoc cm))]
-     (println "cm changed!" content)
      (assoc db :editor-content content))))
 
 ;; user clicks eval
@@ -48,7 +47,7 @@
  (fn [form]
    (book.eval/eval-str
     form
-    'book/page-1
+    'book/test
     (fn [r] (rf/dispatch [:eval-complete r])))))
 
 
@@ -85,7 +84,7 @@
   [:div
    [book.page-1/contents]])
 
-(rf/dispatch-sync [:initialize])
-
-(reagent/render [ui]
-                (js/document.getElementById "app"))
+(defn -main
+  []
+  (rf/dispatch-sync [:initialize])
+  (reagent/render [ui] (js/document.getElementById "app")))
