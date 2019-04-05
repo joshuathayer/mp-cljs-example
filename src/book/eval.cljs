@@ -3,6 +3,7 @@
    [cljs.analyzer :as ana]
    [cljs.env :as env]
    [cljs.js :as cljs]
+   [metaprob.distributions]
    [book.test])
   (:require-macros [book.code :as code]))
 
@@ -31,5 +32,4 @@
   (cljs.js/load-analysis-cache! state 'book.test (code/analyzer-state 'book.test))
   (binding [cljs/*eval-fn* cljs/js-eval
             cljs/*load-fn* load]
-    (cljs/eval-str state "(require 'book.test)" nil {:verbose true, :ns 'book.test, :context :expr} cb)
     (cljs/eval-str state s nil {:verbose true, :ns 'book.test, :context :expr} cb)))
