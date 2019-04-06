@@ -1,6 +1,5 @@
 (ns book.eval
-  (:require-macros [metaprob.generative-functions]
-                   [book.code :as code])
+  (:require-macros [book.code :as code])
   (:require [cljs.analyzer :as ana]
             [cljs.env :as env]
             [cljs.js :as cljs]
@@ -28,7 +27,7 @@
   "https://cljs.github.io/api/cljs.js/STARload-fnSTAR"
   [{:keys [name macros path] :as opts} cb]
   (if (= name 'metaprob.generative-functions)
-    (cb {:lang :clj, :source (code/gensrc)})
+    (cb {:lang :clj, :source "" #_(code/gensrc)})
     (cb {:lang :clj, :source ""})))
 
 (defn eval-str
