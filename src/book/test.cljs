@@ -1,7 +1,13 @@
 (ns book.test
-  (:require [metaprob.distributions :as dist :refer [flip]]))
+  (:refer-clojure :exclude [map replicate apply])
+  (:require [metaprob.prelude :refer [infer-and-score]]
+            [metaprob.distributions :refer [flip]])
+  (:require-macros [book.code]))
 
-(def x 42)
-(def alias dist/flip)
-(def referred flip)
-(def wrapped #(metaprob.distributions/flip))
+(def x (book.code/analyzer-all))
+(def g (pr-str (gen [] 1)))
+(def fg
+  (gen [x]
+    (inc x)))
+
+(def s (book.code/gensrc))

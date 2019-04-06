@@ -15,3 +15,13 @@
 (defmacro mpcode [& forms]
   (let [strs (map (fn [f] (zp/zprint-str f {:style :community})) forms)]
     (string/join "\n\n" (vec strs))))
+
+(defmacro gensrc []
+  (some->> 'metaprob.generative-functions
+           ns-publics
+           vals
+           first
+           meta
+           :file
+           (.getResourceAsStream (clojure.lang.RT/baseLoader))
+           org.apache.commons.io.IOUtils/toString))

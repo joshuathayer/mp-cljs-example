@@ -75,22 +75,7 @@
    [:div
     [editor-component
      (code/mpcode
-
-      ;; (ns foo.bar
-      ;;   (:require [metaprob.prelude :as prelude]
-      ;;             [metaprob.distributions :as dist]))
-
-      ;; this does not work (`:refer`)
-      ;;(ns foo.bar
-      ;;  (:require [metaprob.prelude :as prelude :refer [apply map replicate]]
-      ;;            [metaprob.distributions :as dist :refer [flip uniform uniform-discrete]]))
-
-
-      (defn coin-model-1
-        "Flip a fair coin"
-        [n]
-        (let [p 0.5] (prelude/replicate n (fn [] (dist/flip p)))))
-
-      (coin-model-1 5))]
+      (require-macros 'metaprob.generative-functions)
+      ((metaprob.generative-functions/gen [] :ok)))]
 
     [:button {:on-click #(rf/dispatch [:eval-editor])} "eval"]]])
