@@ -9,6 +9,9 @@
 (defmacro analyzer-state [[_ ns-sym]]
   `'~(get-in @env/*compiler* [:cljs.analyzer/namespaces ns-sym]))
 
+(defmacro analyzer-all []
+  `'~(get @env/*compiler* :cljs.analyzer/namespaces))
+
 (defmacro mpcode [& forms]
   (let [strs (map (fn [f] (zp/zprint-str f {:style :community})) forms)]
     (string/join "\n\n" (vec strs))))

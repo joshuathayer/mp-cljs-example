@@ -22,14 +22,18 @@
 (defn load
   "https://cljs.github.io/api/cljs.js/STARload-fnSTAR"
   [{:keys [name macros path] :as opts} cb]
-  (enable-console-print!)
-  (print "Loading dependency: ")
-  (prn opts)
-  (cb {:lang :clj, :source ""}))
+  (cb nil))
 
 (defn eval-str
   [s ns cb]
-  (cljs.js/load-analysis-cache! state 'book.test (code/analyzer-state 'book.test))
+  #_(cljs.js/load-analysis-cache! state 'book.test (code/analyzer-state 'book.test))
+  (swap! state assoc :cljs.analyzer/namespaces (code/analyzer-all))
   (binding [cljs/*eval-fn* cljs/js-eval
             cljs/*load-fn* load]
-    (cljs/eval-str state s nil {:verbose true, :ns 'book.test, :context :expr} cb)))
+    (let [opts {:verbose true
+                :ns 'book.test
+                :context :expr
+                :static-fns true}]
+      (print "Compiled to:")
+      (cljs/compile-str state s nil opts prn)
+      (cljs/eval-str state s nil opts cb))))
