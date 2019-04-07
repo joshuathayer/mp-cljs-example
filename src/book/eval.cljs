@@ -11,7 +11,7 @@
   (-> state
       (assoc-in [::ana/namespaces 'book.test] (code/analyzer-state 'book.test))))
 
-(defonce state (cljs/empty-state #_init-state))
+(defonce state (cljs/empty-state init-state))
 
 ;; (defn eval-str [form ns cb]
 ;;   (replumb/read-eval-call {:verbose true
@@ -34,7 +34,7 @@
   [s ns cb]
   (binding [cljs/*eval-fn* cljs/js-eval
             cljs/*load-fn* load]
-    (let [opts {:verbose true
+    (let [opts {#_:verbose #_true
                 :ns 'book.test
                 :context :expr}]
       #_(cljs/compile-str state s nil opts prn)
