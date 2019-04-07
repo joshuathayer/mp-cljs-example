@@ -19,7 +19,7 @@
       ;; book.test?
       (update [::ana/namespaces] merge (code/analyzer-all))))
 
-(defonce state (cljs/empty-state init-state-all))
+(defonce state (cljs/empty-state init-state))
 
 (defn load
   "https://cljs.github.io/api/cljs.js/STARload-fnSTAR"
