@@ -31,6 +31,8 @@
     (cb {:lang :clj, :source "" #_(code/gensrc)})
     (cb {:lang :clj, :source ""})))
 
+;; TODO: Evaluate forms separately. Currently only works if `s` contains only
+;; one form.
 (defn eval-str
   [s ns cb]
   (binding [cljs/*eval-fn* cljs/js-eval
