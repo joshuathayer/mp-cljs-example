@@ -6,18 +6,16 @@
             [metaprob.distributions]
             [book.test]))
 
+(def eval-namespace 'book.test)
+(def preloaded-namespaces
+  '#{book.test
+     metaprob.distributions
+     metaprob.prelude})
+
 (defn init-state
   [state]
-  (-> state
-      (assoc-in [::ana/namespaces 'book.test] (code/analyzer-state 'book.test))
-      (assoc-in [::ana/namespaces 'metaprob.distributions] (code/analyzer-state 'metaprob.distributions))))
-
-(defn init-state-all
-  [state]
-  (-> state
-      ;; Maybe trim this down such that it only requires the namespaces used in
-      ;; book.test?
-      (update [::ana/namespaces] merge (code/analyzer-all))))
+  (update state ::ana/namespaces
+          merge (select-keys (code/analyzer-all) preloaded-namespaces)))
 
 (defonce state (cljs/empty-state init-state))
 
@@ -32,5 +30,5 @@
   [s ns cb]
   (binding [cljs/*eval-fn* cljs/js-eval
             cljs/*load-fn* load]
-    (let [opts {:ns 'book.test, :context :expr}]
+    (let [opts {:ns eval-namespace, :context :expr}]
       (cljs/eval-str state s nil opts cb))))

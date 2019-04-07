@@ -3,7 +3,7 @@
   (:require [cljs.js :as cljs]
             [metaprob.prelude :refer [infer-and-score]]
             [metaprob.distributions :refer [flip]]
-            [metaprob.generative-functions])
+            [metaprob.generative-functions :refer [at]])
   (:require-macros [book.code :as code]
                    [metaprob.generative-functions :refer [gen]]))
 
