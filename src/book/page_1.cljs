@@ -53,7 +53,6 @@
     ;; note the keyword for this method
     :reagent-render
     (fn []
-      (println "reagent-render")
       [:div])}))
 
 
