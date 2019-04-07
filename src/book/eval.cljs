@@ -9,6 +9,8 @@
 
 (def eval-namespace 'book.test)
 
+;; TODO: Can this all be simplified with cljs.analyzer.api/analyze-file?
+
 ;; TODO: These can be inferred from the ns form in test.cljs.
 (def preloaded-namespaces
   '#{book.test
