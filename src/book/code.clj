@@ -16,8 +16,9 @@
   (let [strs (map (fn [f] (zp/zprint-str f {:style :community})) forms)]
     (string/join "\n\n" (vec strs))))
 
-(defmacro gensrc []
-  (some->> 'metaprob.generative-functions
+(defmacro gensrc [the-ns]
+  ;; I have no idea why `the-ns` is not just a symbol here, but it's not.
+  (some->> (second the-ns)
            ns-publics
            vals
            first

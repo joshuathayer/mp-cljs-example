@@ -14,22 +14,17 @@
 
 (defonce state (cljs/empty-state #_init-state))
 
-;; (defn eval-str [form ns cb]
-;;   (replumb/read-eval-call {:verbose true
-;;                            :src-paths ["src"]
-;;                            :read-file-fn! read-file
-
-;;                            ;; this is uneffective, after reading replumb source
-;;                            :ns ns}
-;;                           cb
-;;                           form))
-
 (defn load
   "https://cljs.github.io/api/cljs.js/STARload-fnSTAR"
   [{:keys [name macros path] :as opts} cb]
   (if (= name 'metaprob.generative-functions)
-    (cb {:lang :clj, :source (code/gensrc)})
+    (cb {:lang :clj, :source "" ;; (code/gensrc)
+         })
     (cb {:lang :clj, :source ""})))
+
+(defn print-cache [opts cb]
+  (println opts)
+  (cb {:value nil}))
 
 (defn eval-str
   [s ns cb]
