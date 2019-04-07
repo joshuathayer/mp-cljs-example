@@ -66,16 +66,11 @@
    [part-header "Example code evaluation."]
    [:p "Issues:"]
    [:ul
-    [:li [:code ":refer"] " does not work in " [:code ":require"] " forms"]
-    [:li "Starts in " [:code "cljs/user"] " namespace, not namespace that the editor is embedded in"]
-    [:li [:code "(in-ns ...)"] " works, but must be eval'd on its own (using it at the top of the code to be evaulated does not work- only `in-ns` is eval'd)"]
-    [:li "After " [:code "(in-ns 'book.chapter-1)"] " we are able to evaluate functions defined in this namespace (like `part-header`) but not functions in namespaces `require`d into the namespace (`flip`, eg)"]
-    ]
+    [:li [:code "(in-ns ...)"] " works, but must be eval'd on its own (using it at the top of the code to be evaulated does not work- only `in-ns` is eval'd)"]]
    [:p {} "Eval result: " @(rf/subscribe [:eval-res])]
    [:div
     [editor-component
      (code/mpcode
-      (require-macros 'metaprob.generative-functions)
-      ((metaprob.generative-functions/gen [] :ok)))]
+      ((gen [] :ok)))]
 
     [:button {:on-click #(rf/dispatch [:eval-editor])} "eval"]]])

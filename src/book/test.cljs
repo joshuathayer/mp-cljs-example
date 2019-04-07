@@ -18,7 +18,4 @@
     (let [opts {:verbose true, :context :expr}]
       (cljs/eval (cljs/empty-state) form opts cb))))
 
-(def result (eval '(require-macros '[metaprob.generative-functions])
-                  prn))
-
-(def state (code/analyzer-all))
+(eval '(require-macros '[metaprob.generative-functions]) prn)

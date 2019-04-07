@@ -9,19 +9,17 @@
 (defn init-state
   [state]
   (-> state
-      (assoc-in [::ana/namespaces 'book.test] (code/analyzer-state 'book.test))))
+      (assoc-in [::ana/namespaces 'book.test] (code/analyzer-state 'book.test))
+      (assoc-in [::ana/namespaces 'metaprob.distributions] (code/analyzer-state 'metaprob.distributions))))
 
-(defonce state (cljs/empty-state init-state))
+(defn init-state-all
+  [state]
+  (-> state
+      ;; Maybe trim this down such that it only requires the namespaces used in
+      ;; book.test?
+      (update [::ana/namespaces] merge (code/analyzer-all))))
 
-;; (defn eval-str [form ns cb]
-;;   (replumb/read-eval-call {:verbose true
-;;                            :src-paths ["src"]
-;;                            :read-file-fn! read-file
-
-;;                            ;; this is uneffective, after reading replumb source
-;;                            :ns ns}
-;;                           cb
-;;                           form))
+(defonce state (cljs/empty-state init-state-all))
 
 (defn load
   "https://cljs.github.io/api/cljs.js/STARload-fnSTAR"
@@ -34,8 +32,5 @@
   [s ns cb]
   (binding [cljs/*eval-fn* cljs/js-eval
             cljs/*load-fn* load]
-    (let [opts {#_:verbose #_true
-                :ns 'book.test
-                :context :expr}]
-      #_(cljs/compile-str state s nil opts prn)
+    (let [opts {:ns 'book.test, :context :expr}]
       (cljs/eval-str state s nil opts cb))))
