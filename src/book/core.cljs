@@ -39,7 +39,7 @@
  :eval-editor
  (fn [{:keys [db]} [_ _]]
    {:db   (assoc db :evaluating true)
-    :eval (:editor-content db)}))
+    :eval (str "[" (:editor-content db) "]")}))
 
 ;; do the eval, send an event when done
 (rf/reg-fx
