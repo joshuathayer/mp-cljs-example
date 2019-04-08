@@ -4,6 +4,8 @@
   (:require [cljs.analyzer :as ana]
             [cljs.env :as env]
             [cljs.js :as cljs]
+            [cljs.tools.reader.reader-types :as rt]
+            [cljs.reader :as reader]
             [metaprob.distributions]
             [book.test]))
 
@@ -37,8 +39,12 @@
   [s ns cb]
   (binding [cljs/*eval-fn* cljs/js-eval
             cljs/*load-fn* load]
-    (let [opts {:ns eval-namespace, :context :expr}]
-      (cljs/eval-str state s nil opts cb))))
+    (let [opts {:ns eval-namespace, :context :expr}
+          stream (rt/string-push-back-reader s)]
+      (doall (map #(do
+                     (println "going to eval" %)
+                     (cljs/eval-str state (print-str %) nil opts cb))
+                  (reader/read stream))))))
 
 (defn preload-macro-namespace
   [state ns]
