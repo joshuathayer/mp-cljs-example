@@ -70,9 +70,10 @@
    [:div
     [editor-component
      (code/mpcode
-      (infer-and-score :procedure
-                       (gen [] (at :flip flip 0.5))
-                       :inputs []
-                       :observation-trace {:flip {:value true}}))]
+      (time
+       (infer-and-score :procedure
+                        (gen [] (at :flip flip 0.5))
+                        :inputs []
+                        :observation-trace {:flip {:value true}})))]
 
     [:button {:on-click #(rf/dispatch [:eval-editor])} "eval"]]])
