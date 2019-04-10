@@ -45,7 +45,7 @@
 (rf/reg-fx
  :eval
  (fn [form]
-   (book.eval/load-string
+   (book.eval/eval-strs
     form
     'book/test
     (fn [r] (rf/dispatch [:eval-complete r])))))

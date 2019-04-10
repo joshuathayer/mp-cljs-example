@@ -60,65 +60,42 @@
     (let [opts {:ns eval-namespace, :context :expr}]
       (cljs/eval-str state s nil opts cb))))
 
-(defn- read-chars
+(defn read-whitespace
+  "Reads up until, but not including, the first non-whitespace character."
   [reader]
-  (lazy-seq
-   (when-let [ch (rt/read-char reader)]
-     (cons ch (read-chars reader)))))
+  (let [ch (rt/read-char reader)]
+    (when-not (nil? ch)
+      (if (string/blank? (str ch))
+        (recur reader)
+        (rt/unread reader ch)))))
 
-(defn- eof-while-reading?
-  [e]
-  (string/includes? (ex-message e) "EOF"))
-
-(defn- repl-read-string
-  "Returns a vector of the first read form, and any balance text."
-  [s ns]
-  (try
-    (binding [ana/*cljs-ns*    ns
-              env/*compiler*   (cljs/empty-state)
-              r/resolve-symbol ana/resolve-symbol]
-      (let [reader (rt/string-push-back-reader s)]
-        [(r/read {:read-cond :allow :features #{:cljs}} reader)
-         (apply str (read-chars reader))]))
-    (catch :default e
-      (throw (ex-info nil {:clojure.error/phase :read-source} e)))))
-
-(defn- is-readable?
-  "Returns a string representing any text after the first readable form, nor
-  nil if nothing readable."
-  [source ns]
-  (try
-    (second (repl-read-string source ns))
-    (catch :default e
-      (cond
-        (eof-while-reading? (ex-cause e)) nil
-        :else ""))))
-
-(defn- load-string
+(defn eval-strs
   [s ns cb]
   (let [result (volatile! nil)]
-    (loop [source s]
-      (if-let [balance-text (and (seq source)
-                                 (is-readable? source ns))]
-        (do
-          (eval-str (subs source 0 (- (count source) (count balance-text)))
-                    ns
-                    (fn [{:keys [value error ns] :as res}]
-                      (when error
-                        (throw error))
-                      (vreset! result res)))
-          (recur balance-text))
-        (cb @result)))))
+    (loop [reader (rt/source-logging-push-back-reader s)]
+      (read-whitespace reader)
+      (let [line (rt/get-line-number reader)
+            col (rt/get-column-number reader)
+            [form form-str] (r/read+string reader false ::eof)]
+        (if (= ::eof form)
+          (cb @result)
+          (do (eval-str form-str
+                        ns
+                        (fn [{:keys [value error ns] :as next-result}]
+                          (when error
+                            (throw (ex-info "Error evaluating"
+                                            {:string form-str
+                                             :line line
+                                             :col col}
+                                            error)))
+                          (vreset! result next-result)))
+              (recur reader)))))))
 
 #_
-(let [reader (rt/indexing-push-back-reader ":hello\n:world")]
-  (prn (r/read reader))
-  (prn (rt/get-line-number reader))
-  (prn (rt/get-column-number reader)))
+(eval-strs "1 2 3 (inc 0)" 'cljs.user prn)
 
-#_(load-string "(def x 0) (inc x)" 'cljs.user prn)
-#_(load-string "(inc 0) (inc 2)" 'cljs.user prn)
-#_(eval-str "(inc 0) (inc 2)" 'cljs.user prn)
-#_(load-string "(inc 0) (" prn)
-#_(load-string "(inc 0) y" prn)
-#_(load-string "((fn f [] (f)))" prn)
+#_
+(try
+  (eval-strs "1\n2\n      (throw \"unf\")" 'cljs.user prn)
+  (catch js/Error e
+    e))
