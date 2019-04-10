@@ -56,24 +56,58 @@
       [:div])}))
 
 
-;; mpcode is a macro which takes the clojure forms (after the reader),
-;; and turns them in to pretty-printed strings.
+;; Our result may be a "real" DOM element, as returned by crate.
+;; In that case, we can't just return it from a normal component,
+;; re-frame expects components to return hiccup. So, we our result
+;; component is specially-handled: if it's a DOM component, we use
+;; component-did-update to side-effect the DOM with the our result. If
+;; the result is not a DOM component, we stringify it and return it as
+;; a hiccup value from reagent-render
+(defn element-result-component [res]
+  (reagent/create-class
+   {
+    :display-name "result-container"
+
+    :reagent-render
+    (fn [res]
+      [:div#result-container {}])
+
+    :component-did-mount
+    (fn [comp]
+      (let [container (.getElementById js/document "result-container")]
+        (.appendChild container res)))
+
+    :component-did-update
+    (fn [this old-argv]
+      (let [container (.getElementById js/document "result-container")
+            new-argv (reagent/argv this)]
+        (-> container .-firstChild .remove)
+        (.appendChild container (second new-argv))))}))
+
+(defn result []
+  (let [{:keys [ns value] :as res} @(rf/subscribe [:eval-res])]
+    (if (instance? js/Element value)
+      [element-result-component value]
+      [:div {} (str value)])))
 
 (defn contents
   []
-  [:div
-   [part-header "Example code evaluation."]
-   [:p "Issues:"]
-   [:ul
-    [:li [:code "(in-ns ...)"] " works, but must be eval'd on its own (using it at the top of the code to be evaulated does not work- only `in-ns` is eval'd)"]]
-   [:p {} "Eval result: " @(rf/subscribe [:eval-res])]
+  [:div.container {}
+   [:div
+    [part-header "Example code evaluation."]
+    [:p "Issues:"]
+    [:ul
+     [:li [:code "(in-ns ...)"] " works, but must be eval'd on its own (using it at the top of the code to be evaulated does not work- only `in-ns` is eval'd)"]]
+    [result]]
    [:div
     [editor-component
      (code/mpcode
-      (time
-       (infer-and-score :procedure
-                        (gen [] (at :flip flip 0.5))
-                        :inputs []
-                        :observation-trace {:flip {:value true}})))]
+      (crate/html [:h1 "hello"])
+      ;; (time
+      ;;  (infer-and-score :procedure
+      ;;                   (gen [] (at :flip flip 0.5))
+      ;;                   :inputs []
+      ;;                   :observation-trace {:flip {:value true}}))
+      )]
 
     [:button {:on-click #(rf/dispatch [:eval-editor])} "eval"]]])

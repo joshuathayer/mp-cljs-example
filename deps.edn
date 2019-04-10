@@ -10,7 +10,8 @@
   zprint {:mvn/version "0.4.15"}
   cljsjs/codemirror {:mvn/version "5.44.0-1"}
   replumb {:mvn/version "0.2.4"}
-  com.cognitect/transit-cljs {:mvn/version "0.8.256"}}
+  com.cognitect/transit-cljs {:mvn/version "0.8.256"}
+  crate {:mvn/version "0.2.4"}}
 
  :paths ["src" "target" "resources"]
  :aliases {:build-dev {:main-opts ["-m" "figwheel.main" "-b" "dev" "-r"]}}}

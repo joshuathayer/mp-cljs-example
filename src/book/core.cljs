@@ -3,7 +3,6 @@
   (:require [reagent.core :as reagent]
             [re-frame.core :as rf]
             [clojure.string :as str]
-
             [book.page-1]
             [book.eval]))
 
