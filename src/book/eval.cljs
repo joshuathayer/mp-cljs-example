@@ -60,7 +60,7 @@
     (let [opts {:ns eval-namespace, :context :expr}]
       (cljs/eval-str state s nil opts cb))))
 
-(defn read-whitespace
+(defn read-whitespace!
   "Reads up until, but not including, the first non-whitespace character."
   [reader]
   (let [ch (rt/read-char reader)]
@@ -73,7 +73,7 @@
   [s ns cb]
   (let [result (volatile! nil)]
     (loop [reader (rt/source-logging-push-back-reader s)]
-      (read-whitespace reader)
+      (read-whitespace! reader)
       (let [line (rt/get-line-number reader)
             col (rt/get-column-number reader)
             [form form-str] (r/read+string reader false ::eof)]
