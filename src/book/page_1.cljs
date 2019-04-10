@@ -103,12 +103,28 @@
    [:div
     [editor-component
      (code/mpcode
+
       ;; (crate/html [:h1 "hello"])
-      (time
-       (infer-and-score :procedure
-                        (gen [] (at :flip flip 0.5))
-                        :inputs []
-                        :observation-trace {:flip {:value true}}))
-      )]
+      ;; (time
+      ;;  (infer-and-score :procedure
+      ;;                   (gen [] (at :flip flip 0.5))
+      ;;                   :inputs []
+      ;;                   :observation-trace {:flip {:value true}}))
+
+      (defn play-data [& names]
+        (for [n names
+              i (range 20)]
+          {:time i :item n :quantity (+ (Math/pow (* i (count n)) 0.8) (rand-int (count n)))}))
+
+
+      (def line-plot
+        {:data {:values (play-data "monkey" "slipper" "broom")}
+         :encoding {:x {:field "time"}
+                    :y {:field "quantity"}
+                    :color {:field "item" :type "nominal"}}
+         :mark "line"})
+
+      (comment (crate/html [:h1 "this is an h1"]))
+      (crate/html [:div [oz.core/vega-lite line-plot]]))]
 
     [:button {:on-click #(rf/dispatch [:eval-editor])} "eval"]]])
