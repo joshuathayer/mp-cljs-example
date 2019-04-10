@@ -85,10 +85,11 @@
         (.appendChild container (second new-argv))))}))
 
 (defn result []
-  (let [{:keys [ns value] :as res} @(rf/subscribe [:eval-res])]
-    (if (instance? js/Element value)
-      [element-result-component value]
-      [:div {} (str value)])))
+  (let [res @(rf/subscribe [:eval-res])
+        _ (println "res" res)]
+    (if (instance? js/Element (:value res))
+      [element-result-component (:value res)]
+      [:div {} (str res)])))
 
 (defn contents
   []
@@ -102,12 +103,12 @@
    [:div
     [editor-component
      (code/mpcode
-      (crate/html [:h1 "hello"])
-      ;; (time
-      ;;  (infer-and-score :procedure
-      ;;                   (gen [] (at :flip flip 0.5))
-      ;;                   :inputs []
-      ;;                   :observation-trace {:flip {:value true}}))
+      ;; (crate/html [:h1 "hello"])
+      (time
+       (infer-and-score :procedure
+                        (gen [] (at :flip flip 0.5))
+                        :inputs []
+                        :observation-trace {:flip {:value true}}))
       )]
 
     [:button {:on-click #(rf/dispatch [:eval-editor])} "eval"]]])

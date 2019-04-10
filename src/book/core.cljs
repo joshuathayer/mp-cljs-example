@@ -1,11 +1,13 @@
 (ns book.core
   (:refer-clojure :exclude [apply map replicate])
-  (:require [reagent.core :as reagent]
+  (:require [devtools.core :as devtools]
+            [reagent.core :as reagent]
             [re-frame.core :as rf]
             [clojure.string :as str]
             [book.page-1]
             [book.eval]))
 
+(devtools/install!)
 (enable-console-print!)
 
 ;; re-frame stuff
