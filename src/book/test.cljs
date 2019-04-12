@@ -24,11 +24,13 @@
   ([spec id] (crate/html (vega-lite-hiccup spec id))))
 
 (defn grid-view
-  [rows]
-  [:div {:class "grid-view"}
-   (map-indexed (fn [row-ix r]
-                  [:div {:class "grid-row"}
-                   (map-indexed (fn [col-ix spec]
-                                  (vega-lite spec (str "vis-" row-ix "-" col-ix)))
-                                r)])
-                rows)])
+  ([elems] (grid-view elems 4))
+  ([elems cols]
+   (let [rows (partition cols cols nil elems)]
+     [:div {:class "grid-view"}
+      (map-indexed (fn [row-ix r]
+                     [:div {:class "grid-row"}
+                      (map-indexed (fn [col-ix spec]
+                                     (vega-lite spec (str "vis-" row-ix "-" col-ix)))
+                                   r)])
+                   rows)])))

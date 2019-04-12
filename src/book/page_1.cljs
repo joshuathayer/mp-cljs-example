@@ -114,8 +114,12 @@
          :encoding {:x {:field "a", :type "ordinal"},
                     :y {:field "b", :type "quantitative"}}})
 
-      (crate/html (grid-view [[(plot) (plot) (plot)]
-                              [(plot) (plot) (plot)]]))
+      (crate/html (grid-view (repeatedly 11 plot) 4))
+
+
+      (comment (crate/html [:svg:svg {:width 100 :height 100}
+                           [:svg:circle {:cx 10 :cy 10 :r 40 :stroke "black" :stroke-width 3 :fill "red"}]]))
+
       )]
 
     [:button {:on-click #(rf/dispatch [:eval-editor])} "eval"]]])
