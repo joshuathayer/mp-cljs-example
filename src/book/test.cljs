@@ -12,8 +12,6 @@
 
 ;; this namespace seems to need _something_ defined within it or, or
 ;; during evaluation later we can't defined any symbols
-(def foo 10)
-
 (defn vega-lite
   [spec]
   (crate/html [:div
