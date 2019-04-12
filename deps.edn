@@ -9,10 +9,11 @@
   cljfmt {:mvn/version "0.6.3"}
   zprint {:mvn/version "0.4.15"}
   cljsjs/codemirror {:mvn/version "5.44.0-1"}
-  replumb {:mvn/version "0.2.4"}
+  cheshire {:mvn/version "5.8.1"}
   com.cognitect/transit-cljs {:mvn/version "0.8.256"}
   crate {:mvn/version "0.2.4"}
-  metasoarous/oz {:mvn/version "1.6.0-alpha2"}
+  cljsjs/vega-lite {:mvn/version "3.0.2-0"}
+  cljsjs/vega {:mvn/version "4.4.0-0"}
   binaryage/devtools {:mvn/version "0.9.10"}}
 
  :paths ["src" "target" "resources"]

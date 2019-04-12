@@ -104,27 +104,27 @@
     [editor-component
      (code/mpcode
 
-      ;; (crate/html [:h1 "hello"])
-      ;; (time
-      ;;  (infer-and-score :procedure
-      ;;                   (gen [] (at :flip flip 0.5))
-      ;;                   :inputs []
-      ;;                   :observation-trace {:flip {:value true}}))
+      (def plot {:$schema
+                 "https://vega.github.io/schema/vega-lite/v3.json",
+                 :description
+                 "A simple bar chart with embedded data.",
+                 :data
+                 {:values
+                  [{:a "A", :b 28}
+                   {:a "B", :b 55}
+                   {:a "C", :b 43}
+                   {:a "D", :b 91}
+                   {:a "E", :b 81}
+                   {:a "F", :b 53}
+                   {:a "G", :b 19}
+                   {:a "H", :b 87}
+                   {:a "I", :b 52}]},
+                 :mark "bar",
+                 :encoding
+                 {:x {:field "a", :type "ordinal"},
+                  :y {:field "b", :type "quantitative"}}})
 
-      (defn play-data [& names]
-        (for [n names
-              i (range 20)]
-          {:time i :item n :quantity (+ (Math/pow (* i (count n)) 0.8) (rand-int (count n)))}))
-
-
-      (def line-plot
-        {:data {:values (play-data "monkey" "slipper" "broom")}
-         :encoding {:x {:field "time"}
-                    :y {:field "quantity"}
-                    :color {:field "item" :type "nominal"}}
-         :mark "line"})
-
-      (comment (crate/html [:h1 "this is an h1"]))
-      (crate/html [:div [oz.core/vega-lite line-plot]]))]
+      #_(html [:h1 "Hello, world!"])
+      (vega-lite plot))]
 
     [:button {:on-click #(rf/dispatch [:eval-editor])} "eval"]]])
