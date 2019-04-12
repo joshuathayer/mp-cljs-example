@@ -96,35 +96,26 @@
   [:div.container {}
    [:div
     [part-header "Example code evaluation."]
-    [:p "Issues:"]
-    [:ul
-     [:li [:code "(in-ns ...)"] " works, but must be eval'd on its own (using it at the top of the code to be evaulated does not work- only `in-ns` is eval'd)"]]
     [result]]
    [:div
     [editor-component
      (code/mpcode
 
-      (def plot {:$schema
-                 "https://vega.github.io/schema/vega-lite/v3.json",
-                 :description
-                 "A simple bar chart with embedded data.",
-                 :data
-                 {:values
-                  [{:a "A", :b 28}
-                   {:a "B", :b 55}
-                   {:a "C", :b 43}
-                   {:a "D", :b 91}
-                   {:a "E", :b 81}
-                   {:a "F", :b 53}
-                   {:a "G", :b 19}
-                   {:a "H", :b 87}
-                   {:a "I", :b 52}]},
-                 :mark "bar",
-                 :encoding
-                 {:x {:field "a", :type "ordinal"},
-                  :y {:field "b", :type "quantitative"}}})
+      (defn v [] (rand-int 100))
 
-      #_(html [:h1 "Hello, world!"])
-      (vega-lite plot))]
+      (defn plot
+        []
+        {:$schema "https://vega.github.io/schema/vega-lite/v3.json",
+         :description "A simple bar chart with embedded data.",
+         :data {:values [{:a "A", :b (v)} {:a "B", :b (v)} {:a "C", :b (v)}
+                         {:a "D", :b (v)} {:a "E", :b (v)} {:a "F", :b (v)}
+                         {:a "G", :b (v)} {:a "H", :b (v)} {:a "I", :b (v)}]},
+         :mark "bar",
+         :encoding {:x {:field "a", :type "ordinal"},
+                    :y {:field "b", :type "quantitative"}}})
+
+      (crate/html (grid-view [[(plot) (plot) (plot)]
+                              [(plot) (plot) (plot)]]))
+      )]
 
     [:button {:on-click #(rf/dispatch [:eval-editor])} "eval"]]])

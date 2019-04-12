@@ -3,7 +3,6 @@
             [metaprob.distributions :refer [flip]]
             [metaprob.generative-functions :refer [at]]
             [crate.core :as crate :refer [html]]
-            [oz.core]
             [cljsjs.vega]
             [cljsjs.vega-lite])
   (:require-macros [book.code :as code]
@@ -12,9 +11,24 @@
 
 ;; this namespace seems to need _something_ defined within it or, or
 ;; during evaluation later we can't defined any symbols
+
+(defn vega-lite-hiccup
+  [spec id]
+  [:div
+   [:div {:id id}]
+   [:script {:type "text/javascript"}
+    (str "vegaEmbed('#" (str id) "', " (js/JSON.stringify (clj->js spec)) ")")]])
+
 (defn vega-lite
-  [spec]
-  (crate/html [:div
-               [:div {:id "vis"}]
-               [:script {:type "text/javascript"}
-                (str "vegaEmbed('#vis', " (js/JSON.stringify (clj->js spec)) ")")]]))
+  ([spec] (vega-lite spec "vis"))
+  ([spec id] (crate/html (vega-lite-hiccup spec id))))
+
+(defn grid-view
+  [rows]
+  [:div {:class "grid-view"}
+   (map-indexed (fn [row-ix r]
+                  [:div {:class "grid-row"}
+                   (map-indexed (fn [col-ix spec]
+                                  (vega-lite spec (str "vis-" row-ix "-" col-ix)))
+                                r)])
+                rows)])
