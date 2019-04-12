@@ -1,10 +1,21 @@
 (ns book.code
   (:require
+   [cljs.js]
    [cljs.env :as env]
    [cljfmt.core :as cljfmt :refer [reformat-string]]
    [clojure.pprint :refer [pprint]]
    [zprint.core :as zp]
    [clojure.string :as string]))
+
+(defmacro gensrc []
+  (some->> 'metaprob.generative-functions
+           ns-publics
+           vals
+           first
+           meta
+           :file
+           (.getResourceAsStream (clojure.lang.RT/baseLoader))
+           org.apache.commons.io.IOUtils/toString))
 
 (defmacro analyzer-state [[_ ns-sym]]
   `'~(get-in @env/*compiler* [:cljs.analyzer/namespaces ns-sym]))

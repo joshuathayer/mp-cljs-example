@@ -6,8 +6,7 @@
             [crate.core :as crate :refer [html]]
             [cljsjs.vega]
             [cljsjs.vega-lite])
-  (:require-macros [book.code :as code]
-                   [crate.def-macros :refer [defpartial]]
+  (:require-macros [crate.def-macros :refer [defpartial]]
                    [metaprob.generative-functions :refer [gen]]))
 
 ;; this namespace seems to need _something_ defined within it or, or

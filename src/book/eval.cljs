@@ -2,6 +2,7 @@
   (:refer-clojure :exclude [eval])
   (:require-macros [book.code :as code])
   (:require [clojure.string :as string]
+            [devtools.core :as devtools]
             [cljs.analyzer :as ana]
             [cljs.env :as env]
             [cljs.js :as cljs]
@@ -9,6 +10,8 @@
             [cljs.tools.reader.reader-types :as rt]
             [metaprob.distributions]
             [book.test]))
+
+(devtools/install!)
 
 (def eval-namespace 'book.test)
 
@@ -31,7 +34,7 @@
   "https://cljs.github.io/api/cljs.js/STARload-fnSTAR"
   [{:keys [name macros path] :as opts} cb]
   (if (= name 'metaprob.generative-functions)
-    (cb {:lang :clj, :source "" #_(code/gensrc)})
+    (cb {:lang :clj, :source (code/gensrc)})
     (cb {:lang :clj, :source ""})))
 
 (defn- preload-macro-namespace!
