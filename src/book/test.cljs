@@ -12,25 +12,29 @@
 ;; this namespace seems to need _something_ defined within it or, or
 ;; during evaluation later we can't defined any symbols
 
-(defn vega-lite-hiccup
-  [spec id]
-  [:div
-   [:div {:id id}]
-   [:script {:type "text/javascript"}
-    (str "vegaEmbed('#" (str id) "', " (js/JSON.stringify (clj->js spec)) ")")]])
+(defonce next-id (atom 0))
+
+(defn id
+  []
+  (str "viz-" (swap! next-id inc)))
 
 (defn vega-lite
-  ([spec] (vega-lite spec "vis"))
-  ([spec id] (crate/html (vega-lite-hiccup spec id))))
+  [spec]
+  (crate/html
+   (let [id (id)]
+     [:div
+      [:div {:id id}]
+      [:script {:type "text/javascript"}
+       (str "vegaEmbed('#" (str id) "', " (js/JSON.stringify (clj->js spec)) ")")]])))
 
 (defn grid-view
-  ([elems] (grid-view elems 4))
+  ([elems] (grid-view elems 3))
   ([elems cols]
-   (let [rows (partition cols cols nil elems)]
+   (let [rows (partition-all cols cols elems)]
      [:div {:class "grid-view"}
-      (map-indexed (fn [row-ix r]
+      (map-indexed (fn [row-ix row]
                      [:div {:class "grid-row"}
-                      (map-indexed (fn [col-ix spec]
-                                     (vega-lite spec (str "vis-" row-ix "-" col-ix)))
-                                   r)])
+                      (map-indexed (fn [col-ix elem]
+                                     elem)
+                                   row)])
                    rows)])))
