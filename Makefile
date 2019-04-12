@@ -1,0 +1,2 @@
+clean:
+	rm -Rf out
