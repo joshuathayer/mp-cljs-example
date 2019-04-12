@@ -95,9 +95,6 @@
   []
   [:div.container {}
    [:div
-    [part-header "Example code evaluation."]
-    [result]]
-   [:div
     [editor-component
      (code/mpcode
 
@@ -122,4 +119,5 @@
 
       )]
 
-    [:button {:on-click #(rf/dispatch [:eval-editor])} "eval"]]])
+    [:button {:on-click #(rf/dispatch [:eval-editor])} "eval"]]
+   [:div [result]]])
