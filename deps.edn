@@ -1,7 +1,8 @@
 {:deps
  {org.clojure/clojurescript {:mvn/version "1.10.516"}
   probcomp/metaprob {:git/url "https://github.com/probcomp/metaprob"
-                     :sha "ad72523cd17925df0693dd764b9ecc7698684a4e"}
+                     :sha #_"ad72523cd17925df0693dd764b9ecc7698684a4e" ; master
+                     "179790b7aaa0b74172a7b73c39a2a2eb67da7bb8"} ; autodiff
   reagent {:mvn/version "0.8.1"}
   re-frame {:mvn/version "0.10.6"}
   com.bhauman/figwheel-main {:mvn/version "0.2.0"}

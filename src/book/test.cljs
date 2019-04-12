@@ -1,7 +1,8 @@
 (ns book.test
-  (:require [metaprob.prelude :refer [exp infer-and-score]]
-            [metaprob.distributions :refer [flip]]
-            [metaprob.generative-functions :refer [at]]
+  (:require [metaprob.autodiff :as auto]
+            [metaprob.distributions :as d :refer [flip]]
+            [metaprob.generative-functions :as gf :refer [at]]
+            [metaprob.prelude :as p :refer [infer-and-score]]
             [crate.core :as crate :refer [html]]
             [cljsjs.vega]
             [cljsjs.vega-lite])
