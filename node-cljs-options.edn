@@ -1,3 +1,4 @@
-{ :npm-deps {"express" "4.16.4"
+;; this is used to install npm packages used by the cloud server
+{ :npm-deps {"express"     "4.16.4"
              "body-parser" "1.18.3"}
   :install-deps true }

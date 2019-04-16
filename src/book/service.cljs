@@ -102,6 +102,9 @@
   (println "Starting server")
   (let [app (express)
         _ (.use app (.json body-parser))]
-    (.get app "/" (fn [req res] (.send res "Hello, world")))
+    (.get app "/" (fn [req res] (.send res "Post to /eval for Metaprob evaluation.")))
     (.post app "/eval" handle-eval)
-    (.listen app 3000 (fn [] (println "Example app listening on port 3000!")))))
+    (.listen app 3000 (fn [] (println "Metaprob app listening on port 3000!")))))
+
+
+(set! *main-cli-fn* start-server)
