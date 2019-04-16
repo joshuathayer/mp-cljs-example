@@ -7,9 +7,9 @@ node-repl:
 .PHONY: node-repl
 
 build-image:
-	gcloud builds submit --tag gcr.io/run-example/mp-eval
+	gcloud --verbosity debug builds submit --tag gcr.io/run-example/mp-eval
 .PHONY: build-image
 
 deploy:
-	gcloud beta run deploy --image gcr.io/run-example/mp-eval
+	gcloud --verbosity debug beta run deploy --image gcr.io/run-example/mp-eval
 .PHONY: deploy

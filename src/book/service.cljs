@@ -14,6 +14,8 @@
 
 (def eval-namespace 'book.test-node)
 
+(def PORT (int (or (.-PORT (.-env js/process)) "3000")))
+
 ;; TODO: Can this all be simplified with cljs.analyzer.api/analyze-file?
 
 ;; TODO: These can be inferred from the ns form in test-node.cljs.
@@ -104,7 +106,7 @@
         _ (.use app (.json body-parser))]
     (.get app "/" (fn [req res] (.send res "Post to /eval for Metaprob evaluation.")))
     (.post app "/eval" handle-eval)
-    (.listen app 3000 (fn [] (println "Metaprob app listening on port 3000!")))))
+    (.listen app PORT (fn [] (println "Metaprob app listening on port" PORT)))))
 
 
 (set! *main-cli-fn* start-server)
