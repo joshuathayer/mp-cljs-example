@@ -1,15 +1,19 @@
 (ns book.page-1
-  (:require-macros [book.code :as code])
+  (:require-macros [book.code :as code]
+                   [book.cloud :refer [cloud]]
+                   [cljs.core.async.macros :refer [go]])
   (:require [metaprob.prelude :as prelude :refer [apply map replicate]]
             [metaprob.distributions :as dist :refer [flip uniform uniform-discrete]]
-
             [re-frame.core :as rf]
             [reagent.core :as reagent]
             [cljsjs.codemirror]
             [cljsjs.codemirror.mode.clojure]
             [cljsjs.codemirror.addon.edit.matchbrackets]
             [cljsjs.codemirror.addon.comment.comment]
-            [book.eval :as eval]))
+            [book.eval :as eval]
+            [cljs-http.client :as http]
+            [zprint.core :as zp]
+            [cljs.core.async :refer [<!]]))
 
 (defn chapter-header
   [txt]
@@ -22,7 +26,7 @@
   [txt]
   [:h3 txt])
 
-(defn editor-component [content]
+(defn editor-component [ed-id content]
   (reagent/create-class
    {:component-did-mount
     (fn [ta]
@@ -34,17 +38,12 @@
                      :lineNumbers true
                      :lineWrapping true
                      :matchBrackets true})]
-        (.on cm "change" (fn [instance] (rf/dispatch [:cm-changed instance])))
-        (rf/dispatch-sync [:assoc-cm-editor cm])
-        (rf/dispatch [:cm-changed cm])))
-
-    ;; :component-did-update
-    ;; (fn [this old-argv]
-    ;;   (let [cm @(rf/subscribe [:cm-editor])]
-    ;;     (.setOption cm "theme" @(rf/subscribe [:theme]))))
+        (.on cm "change" (fn [instance] (rf/dispatch [:cm-changed ed-id instance])))
+        (rf/dispatch-sync [:assoc-cm-editor ed-id cm])
+        (rf/dispatch [:cm-changed ed-id cm])))
 
     ;; name your component for inclusion in error messages
-    :display-name "editor-component"
+    :display-name (str "editor-component-" ed-id)
 
     :component-will-unmount
     (fn []
@@ -95,7 +94,15 @@
   []
   [:div.container {}
    [:div
+    [:h3 "Cloud code"]
     [editor-component
+     :remote
+     (code/mpcode
+      (defn plus [x y] (+ x y)))]]
+   [:div
+    [:h3 "Local code"]
+    [editor-component
+     :local
      (code/mpcode
 
       (defn v [] (rand-int 100))

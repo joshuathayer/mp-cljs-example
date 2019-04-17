@@ -25,22 +25,22 @@
 
 (rf/reg-event-db
  :assoc-cm-editor
- (fn [db [_ ed]]
-   (assoc db :cm-editor ed)))
+ (fn [db [_ ed-id ed]]
+   (assoc-in db [:cm-editor ed-id] ed)))
 
 ;; editor content changes
 (rf/reg-event-db
  :cm-changed
- (fn [db [_ cm]]
+ (fn [db [_ ed-id cm]]
    (let [content (.getValue (.getDoc cm))]
-     (assoc db :editor-content content))))
+     (assoc-in db [:editor-content ed-id] content))))
 
 ;; user clicks eval
 (rf/reg-event-fx
  :eval-editor
  (fn [{:keys [db]} [_ _]]
    {:db   (assoc db :evaluating true)
-    :eval (:editor-content db)}))
+    :eval (get-in db [:editor-content :local])}))
 
 ;; do the eval, send an event when done
 (rf/reg-fx

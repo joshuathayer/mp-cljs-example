@@ -15,6 +15,7 @@
   crate {:mvn/version "0.2.4"}
   cljsjs/vega-lite {:mvn/version "3.0.2-0"}
   cljsjs/vega {:mvn/version "4.4.0-0"}
-  binaryage/devtools {:mvn/version "0.9.10"}}
+  binaryage/devtools {:mvn/version "0.9.10"}
+  cljs-http {:mvn/version "0.1.46"}}
  :paths ["src" "target" "resources"]
  :aliases {:build-dev {:main-opts ["-m" "figwheel.main" "-b" "dev" "-r"]}}}
